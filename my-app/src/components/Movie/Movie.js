@@ -1,35 +1,54 @@
 import React, { Component } from "react";
+import axios from 'axios';
+import {
+    // BrowserRouter as Router,
+    Link,
+    Route,
+  } from 'react-router-dom'
 // import { Link } from "react-router-dom";
 
 class Movie extends Component {
 	constructor(props) {
-		super(props)
-		this.server = 'http://localhost:3000/api/movies';
-
+		super(props);
 		this.state = {
 			movies: []
 		}
     }
-    componentDidMount() {
-        this.getMovie();
-    }
-        setQuery(evt) {
-            this.query = evt.target.value;
-        }
-    getMovie() {
-        fetch(this.server+'/movie'+this.query)
-        .then(res => res.json())
-        .then(res => this.setState({movies: res.results}))
-        .then(res => console.log(this.state))
-    }    
 
-    render() {
-		return (
-            <div>
-                <h1>{this.props.movies}</h1>
-                <button onClick={this.getMovie}>Movies</button>
-            </div> 
-        );
+    componentDidMount() {
+        axios.get('http://localhost:3001/api/movies')
+        .then((res) => {
+            console.log(res)
+            this.setState({
+                movies: res.data
+            })
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    }
+    
+    render () {
+        const movies = this.state.movies.map((movie, index) => {
+          return (
+            <div key={ index }>
+              <p>
+                <Link to={`/movies/${movie._id}`}>{ movie.movie }</Link>
+              </p>
+              <Route
+                path={`/movies/${movie._id}`}
+              />
+            </div>
+          )
+        })
+    
+        return (
+          <div>
+            <h1>Movies</h1>
+            { movies }
+          </div>
+        )
+      
     }
 }
 

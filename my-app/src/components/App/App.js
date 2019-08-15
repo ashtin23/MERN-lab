@@ -4,31 +4,31 @@ import {
   Link,
   Route,
   Switch
-} from 'react-router-dom'
+} from 'react-router-dom';
 import Movie from '../Movie/Movie';
 import './App.css';
+import axios from 'axios';
+
+// const url = 'http://localhost:3001/api/movies'
 
 class App extends Component  {
   constructor() {
     super();
     this.state = {
-      movies: []
+      movies: null
     };
-    this.getMovies = this.getMovies.bind(this);
+    // this.getMovies = this.getMovies.bind(this);
   }
 
-  delete(){}
+
+  // delete(){}
 
   componentDidMount() {
-    this.getMovies();
-  }
-  getMovies() {
-    fetch("http://localhost:3000/")
-    .then(res => res.json())
+    axios.get("http://localhost:3001/api/movies")
     .then(res => {
       console.log(res)
-      this.setState({movies: res});
-    });
+      this.setState({ movies: res.data })
+    })
   }
 
   render() {
